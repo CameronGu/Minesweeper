@@ -68,16 +68,30 @@ board.forEach(row => {
     })
 })
 
-
+const shakeBoard = () => {
+    boardElement.classList.remove("shake");
+    void boardElement.offsetWidth;  // trick to enable resetting the animation
+    boardElement.classList.add("shake");
+}
 
 const markTile = tile => {
-    const markable = (tile.status === TILE_STATUSES.HIDDEN || tile.status === TILE_STATUSES.MARKED);
-    const noMoreMarksRemain = minesRemainingText.textContent <= 0
-    markable ? 
-        tile.status === TILE_STATUSES.MARKED || noMoreMarksRemain ? 
-            (tile.status = TILE_STATUSES.HIDDEN, tile.element.textContent = "") :
-            (tile.status = TILE_STATUSES.MARKED, tile.element.textContent = "⚠️") :
-        '';
+    const isMarkable = (tile.status === TILE_STATUSES.HIDDEN || tile.status === TILE_STATUSES.MARKED);
+    const isHidden = tile.status === TILE_STATUSES.HIDDEN;
+    const isMarked = tile.status === TILE_STATUSES.MARKED;
+    const noMoreMarksRemain = minesRemainingText.textContent <= 0;
+    if (isMarkable) {
+        if (noMoreMarksRemain && !isMarked) {
+            shakeBoard();
+            return;
+        }
+        if (isMarked) {
+            tile.status = TILE_STATUSES.HIDDEN;
+            tile.element.textContent = "";
+        } else {
+            tile.status = TILE_STATUSES.MARKED;
+            tile.element.textContent = "⚠️";
+        }
+    }
 }
 
 const numMinesLeft = (board, NUMBER_OF_MINES) => {
@@ -93,6 +107,7 @@ const revealTile = (board, tile) => {
         if (isMine) {
             tile.element.textContent = "💣";
             tile.status = TILE_STATUSES.MINE;
+            shakeBoard();
             checkGameEnd('LOSE');
             return;
         } else {
