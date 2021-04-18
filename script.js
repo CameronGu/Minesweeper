@@ -75,8 +75,8 @@ const markTile = tile => {
     const noMoreMarksRemain = minesRemainingText.textContent <= 0
     markable ? 
         tile.status === TILE_STATUSES.MARKED || noMoreMarksRemain ? 
-            tile.status = TILE_STATUSES.HIDDEN :
-            tile.status = TILE_STATUSES.MARKED :
+            (tile.status = TILE_STATUSES.HIDDEN, tile.element.textContent = "") :
+            (tile.status = TILE_STATUSES.MARKED, tile.element.textContent = "⚠️") :
         '';
 }
 
@@ -91,6 +91,7 @@ const revealTile = (board, tile) => {
     const isMine = tile.mine === true;
     if (revealable) {
         if (isMine) {
+            tile.element.textContent = "💣";
             tile.status = TILE_STATUSES.MINE;
             checkGameEnd('LOSE');
             return;

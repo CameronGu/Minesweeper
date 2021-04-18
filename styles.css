@@ -6,7 +6,7 @@
 
   body {
     margin: 0;
-    /* background-color: #333; */
+    background-color: #333;
     background: linear-gradient(to right, #b2deec,#c56183);
     display: flex;
     align-items: center;
@@ -48,7 +48,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: rgba(43, 43, 43, 0.55);
+    color: rgba(43, 43, 43, 0.75);
     border: 2px solid #BBB;
     user-select: none;
   }
@@ -56,12 +56,12 @@
   .board > [data-status="hidden"] {
     background-color: #BBB;
     cursor: pointer;
-    color:transparent;
+    /* color:transparent; */
   }
   
   .board > [data-status="mine"] {
-    background-color: red;
-    color:transparent;
+    background-color: rgb(255, 0, 0);
+    color: rgb(43, 43, 43);
   }
   
   .board > [data-status="number"] {
@@ -70,5 +70,5 @@
   
   .board > [data-status="marked"] {
     background-color: yellow;
-    color:transparent;
+    color: rgba(43, 43, 43, 0.75);
   }
