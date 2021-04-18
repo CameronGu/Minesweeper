@@ -122,11 +122,18 @@ const checkGameEnd = status => {
         messageText.textContent = "You Lose";
         board.forEach(row => {
             row.forEach(tile => {
-                if (tile.status === TILE_STATUSES.MARKED) {
-                    markTile(tile);
+                if (tile.status === TILE_STATUSES.MARKED && tile.mine === false) {
+                        tile.status = TILE_STATUSES.MISTAKE;
+                        tile.element.textContent = "💩";
                 }
                 if (tile.mine) {
-                    revealTile(board, tile)}
+                    if (tile.status === TILE_STATUSES.MARKED) {
+                        tile.status = TILE_STATUSES.MISTAKE;
+                        tile.element.textContent = "💣"
+                    } else {
+                        revealTile(board, tile)
+                    }
+                }    
             })
         })
     }

@@ -10,7 +10,8 @@ export const TILE_STATUSES = {
     HIDDEN: 'hidden',
     MINE: 'mine',
     NUMBER: 'number',
-    MARKED: 'marked'
+    MARKED: 'marked',
+    MISTAKE: 'mistake'
 }
 
 export const checkWin = gameBoard => {
