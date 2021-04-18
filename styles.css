@@ -30,6 +30,33 @@
     font-size: 1.5rem;
     margin-bottom: 10px;
   }
+
+  .play_area {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .play_area_left {
+    display: flex;
+    width: 250px;
+    height: 500px;
+    z-index: -100;
+    /* transform: translateX(50%); */
+  }
+
+  .spider_head {
+    display: flex;
+    align-items: flex-end;
+    transform: translateX(30%);
+    transition: 1s ease-in-out;
+    /* transform: rotate(-45deg);
+    transform-origin: bottom left; */
+  }
+
+  .play_area_right {
+    width: 250px;
+    height: 500px;
+  }
   
   .board {
     display: inline-grid;
@@ -37,7 +64,7 @@
     grid-template-columns: repeat(var(--size), 60px);
     grid-template-rows: repeat(var(--size), 60px);
     gap: 4px;
-    background-color: rgba(255, 255, 255, .75);
+    background-color: rgba(255, 255, 255, .9);
     outline: thick solid rgba(0, 0, 0, .25);
   }
   
