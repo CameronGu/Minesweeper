@@ -2,6 +2,11 @@ import { createBoard, TILE_STATUSES, getNeighborTiles, checkWin} from './mineswe
 
 const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
+const icons = {
+    mine: "🕷️",
+    marked: "🕸️",
+    mistake: "💩"
+};
 
 // const startGame = (BOARD_SIZE,NUMBER_OF_MINES) => {
 //     const board = createBoard(BOARD_SIZE,NUMBER_OF_MINES);
@@ -89,7 +94,7 @@ const markTile = tile => {
             tile.element.textContent = "";
         } else {
             tile.status = TILE_STATUSES.MARKED;
-            tile.element.textContent = "⚠️";
+            tile.element.textContent = icons.marked;
         }
     }
 }
@@ -105,7 +110,7 @@ const revealTile = (board, tile) => {
     const isMine = tile.mine === true;
     if (revealable) {
         if (isMine) {
-            tile.element.textContent = "💣";
+            tile.element.textContent = icons.mine;
             tile.status = TILE_STATUSES.MINE;
             shakeBoard();
             checkGameEnd('LOSE');
@@ -139,12 +144,12 @@ const checkGameEnd = status => {
             row.forEach(tile => {
                 if (tile.status === TILE_STATUSES.MARKED && tile.mine === false) {
                         tile.status = TILE_STATUSES.MISTAKE;
-                        tile.element.textContent = "💩";
+                        tile.element.textContent = icons.mistake;
                 }
                 if (tile.mine) {
                     if (tile.status === TILE_STATUSES.MARKED) {
                         tile.status = TILE_STATUSES.MISTAKE;
-                        tile.element.textContent = "💣"
+                        tile.element.textContent = icons.marked;
                     } else {
                         revealTile(board, tile)
                     }
