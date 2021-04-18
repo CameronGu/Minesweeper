@@ -1,7 +1,6 @@
 export const createBoard = (boardSize, numberOfMines) => {
     let gameBoard = createEmptyBoard(boardSize);
     const mineLocations = getMineLocations(boardSize, numberOfMines);
-    console.log(mineLocations)
     placeMines(gameBoard, mineLocations);
     markMinesNearby(gameBoard, mineLocations);
     return gameBoard;
@@ -45,12 +44,7 @@ const getMineLocations = (boardSize, numberOfMines) => {
     while (mineLocations.length < numberOfMines) {
         const x = getRandNum(boardSize);
         const y = getRandNum(boardSize);
-        console.log(mineLocations);
-        console.log([x,y],mineLocations.includes([x,y]))
-        console.log(mineLocations.some(e => e.id === `${x}${y}`))
-        if (mineLocations.some(e => e.id === `${x}${y}`)) {
-            console.log('included',[x,y]);
-        } else {
+        if (!mineLocations.some(e => e.id === `${x}${y}`)) {
             mineLocations.push({x,y,id:`${x}${y}`})
         }
     }
@@ -66,37 +60,43 @@ const placeMines = (gameBoard, mineLocations) => {
     })
 }
 
+const isValidNeighbor = (gameBoard,[x,y]) => {
+    const boardSize = gameBoard.length;
+    const validX = x >= 0 && x < boardSize;
+    const validY = y >= 0 && y < boardSize;
+    return validX && validY ? gameBoard[y][x].mine !== true : false;
+}
+
+export const getNeighborTiles = (gameBoard, {x,y}) => {
+    const transpositions = [{x:0,y:-1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}, {x:0,y:1}, {x:-1,y:1}, {x:-1,y:0}, {x:-1,y:-1}];
+    const validNeighbors = [];
+    for (const transposition of transpositions) {
+        const testX = x + transposition.x;
+        const testY = y + transposition.y;
+        isValidNeighbor(gameBoard,[testX, testY]) ? validNeighbors.push({x: testX, y: testY}) : '';
+    }
+    return validNeighbors;
+}
+
 const markMinesNearby = (gameBoard, mineLocations) => {
-    const isValidNeighbor = (x,y) => {
-        const boardSize = gameBoard.length;
-        const validX = x >= 0 && x < boardSize;
-        const validY = y >= 0 && y < boardSize;
-        return validX && validY ? gameBoard[y][x].mine !== true : false;
-    }
-    const transpositions = {
-        n: {x:0,y:-1},
-        ne: {x:1,y:-1},
-        e: {x:1,y:0},
-        se: {x:1,y:1},
-        s: {x:0,y:1},
-        sw: {x:-1,y:1},
-        w: {x:-1,y:0},
-        nw: {x:-1,y:-1}
-    }
-    const directions = ['n','ne','e','se','s','sw','w','nw'];
-    mineLocations.forEach((location) => {
-        directions.forEach(direction => {
-            const mineX = location.x;
-            const mineY = location.y;
-            const neighborX = mineX + transpositions[direction].x;
-            const neighborY = mineY + transpositions[direction].y;
-            if (isValidNeighbor(neighborX,neighborY)) {
-                const tile = gameBoard[neighborY][neighborX];
-                tile.nearbyMines++;
-                tile.element.textContent = tile.nearbyMines;
-            }
+    mineLocations.forEach(mineLocation => {
+        getNeighborTiles(gameBoard,mineLocation).forEach(neighborLocation => {
+            const tile = gameBoard[neighborLocation.y][neighborLocation.x]
+            tile.nearbyMines++;
+        })
+    });
+}
+
+export const checkWin = gameBoard => {
+    return gameBoard.every(row => {
+        return row.every(tile => {
+            return (
+                tile.status === TILE_STATUSES.NUMBER ||
+                (tile.mine &&
+                    (tile.status === TILE_STATUSES.HIDDEN ||
+                        tile.status === TILE_STATUSES.MARKED)
+                )
+            )
         })
     })
 }
-
-// console.log(createBoard(10,10))
