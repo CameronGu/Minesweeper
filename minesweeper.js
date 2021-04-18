@@ -13,6 +13,32 @@ export const TILE_STATUSES = {
     MARKED: 'marked'
 }
 
+export const checkWin = gameBoard => {
+    return gameBoard.every(row => {
+        return row.every(tile => {
+            return (
+                tile.status === TILE_STATUSES.NUMBER ||
+                (tile.mine &&
+                    (tile.status === TILE_STATUSES.HIDDEN ||
+                        tile.status === TILE_STATUSES.MARKED)
+                )
+            )
+        })
+    })
+}
+
+export const getNeighborTiles = (gameBoard, {x,y}) => {
+    const transpositions = [{x:0,y:-1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}, {x:0,y:1}, {x:-1,y:1}, {x:-1,y:0}, {x:-1,y:-1}];
+    const validNeighbors = [];
+    for (const transposition of transpositions) {
+        const testX = x + transposition.x;
+        const testY = y + transposition.y;
+        isValidNeighbor(gameBoard,[testX, testY]) ? validNeighbors.push({x: testX, y: testY}) : '';
+    }
+    return validNeighbors;
+}
+
+
 const createEmptyBoard = (boardSize) => {
     const board = new Array(boardSize).fill(0)
     .map((e,y) => new Array(boardSize).fill({y,})
@@ -67,17 +93,6 @@ const isValidNeighbor = (gameBoard,[x,y]) => {
     return validX && validY ? gameBoard[y][x].mine !== true : false;
 }
 
-export const getNeighborTiles = (gameBoard, {x,y}) => {
-    const transpositions = [{x:0,y:-1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}, {x:0,y:1}, {x:-1,y:1}, {x:-1,y:0}, {x:-1,y:-1}];
-    const validNeighbors = [];
-    for (const transposition of transpositions) {
-        const testX = x + transposition.x;
-        const testY = y + transposition.y;
-        isValidNeighbor(gameBoard,[testX, testY]) ? validNeighbors.push({x: testX, y: testY}) : '';
-    }
-    return validNeighbors;
-}
-
 const markMinesNearby = (gameBoard, mineLocations) => {
     mineLocations.forEach(mineLocation => {
         getNeighborTiles(gameBoard,mineLocation).forEach(neighborLocation => {
@@ -87,16 +102,3 @@ const markMinesNearby = (gameBoard, mineLocations) => {
     });
 }
 
-export const checkWin = gameBoard => {
-    return gameBoard.every(row => {
-        return row.every(tile => {
-            return (
-                tile.status === TILE_STATUSES.NUMBER ||
-                (tile.mine &&
-                    (tile.status === TILE_STATUSES.HIDDEN ||
-                        tile.status === TILE_STATUSES.MARKED)
-                )
-            )
-        })
-    })
-}

@@ -3,10 +3,55 @@ import { createBoard, TILE_STATUSES, getNeighborTiles, checkWin} from './mineswe
 const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
 
+// const startGame = (BOARD_SIZE,NUMBER_OF_MINES) => {
+//     const board = createBoard(BOARD_SIZE,NUMBER_OF_MINES);
+//     //reset timer
+//     var timer = document.querySelector(".timer");
+//     timer.innerHTML = "0 mins 0 secs";
+//     clearInterval(interval);
+    
+// }
+  //game timer
+  let second = 0, minute = 0, millisecond = 0;
+  let timer = document.querySelector(".timer");
+  let interval;
+  const formatTimer = num => {
+      return num.toString().padStart(2,'0')
+  }
+  const startTimer = () => {
+      interval = setInterval(function(){
+          timer.innerHTML = `${formatTimer(minute)}:${formatTimer(second)}:${formatTimer(millisecond)}`;
+          millisecond++;
+          if(millisecond === 100) {
+              second++;
+              millisecond = 0;
+          }
+          if(second == 60){
+              minute++;
+              second = 0;
+          }
+          if(minute == 60){
+              hour++;
+              minute = 0;
+          }
+      },10);
+  }
+  const stopTimer = () => {
+    return clearInterval(interval);
+  }
+  const resetTimer = () => {
+    return (timer.innerHTML = "00:00:00",
+    clearInterval(interval));
+  }
+
 const board = createBoard(BOARD_SIZE,NUMBER_OF_MINES);
 const boardElement = document.querySelector(".board");
 const minesRemainingText = document.querySelector("[data-mine-count]");
 const messageText = document.querySelector(".subtext");
+startTimer();
+
+boardElement.style.setProperty("--size", BOARD_SIZE)
+minesRemainingText.textContent = NUMBER_OF_MINES;
 
 board.forEach(row => {
     row.forEach(tile => {
@@ -23,8 +68,7 @@ board.forEach(row => {
     })
 })
 
-boardElement.style.setProperty("--size", BOARD_SIZE)
-minesRemainingText.textContent = NUMBER_OF_MINES;
+
 
 const markTile = tile => {
     const markable = (tile.status === TILE_STATUSES.HIDDEN || tile.status === TILE_STATUSES.MARKED);
@@ -48,7 +92,7 @@ const revealTile = (board, tile) => {
     if (revealable) {
         if (isMine) {
             tile.status = TILE_STATUSES.MINE;
-            checkGameEnd('LOSE')
+            checkGameEnd('LOSE');
             return;
         } else {
             tile.status = TILE_STATUSES.NUMBER; 
@@ -65,8 +109,9 @@ const checkGameEnd = status => {
     const win = checkWin(board);
 
     if (win || lose) {
-        boardElement.addEventListener("click", stopProp, { capture: true })
-        boardElement.addEventListener("contextmenu", stopProp, { capture: true })
+        stopTimer();
+        boardElement.addEventListener("click", stopProp, { capture: true });
+        boardElement.addEventListener("contextmenu", stopProp, { capture: true });
     }
 
     if (win) {
