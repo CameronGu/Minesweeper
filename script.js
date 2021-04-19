@@ -53,7 +53,6 @@ const icons = {
 
 const board = createBoard(BOARD_SIZE,NUMBER_OF_MINES);
 const boardElement = document.querySelector(".board");
-const spiderHeadElement = document.querySelector(".spider_head");
 const minesRemainingText = document.querySelector("[data-mine-count]");
 const messageText = document.querySelector(".subtext");
 startTimer();
@@ -102,15 +101,18 @@ const markTile = tile => {
     }
 }
 
+const revealSpiderHead = (minesRemaining, NUMBER_OF_MINES) => {
+    const spiderHeadElement = document.querySelector(".spider_head");
+    const percentMinesRemaining = minesRemaining / NUMBER_OF_MINES;
+    spiderHeadElement.style.transform = "translateX("+(50*percentMinesRemaining)+"%)";
+}
+
 const numMinesLeft = (board, NUMBER_OF_MINES) => {
     const markedTilesCount = board.reduce((count, row) => {
         return (count + row.filter(tile => tile.status === TILE_STATUSES.MARKED).length)}, 0);
     const minesRemaining = NUMBER_OF_MINES - markedTilesCount;
-    const percentMinesRemaining = minesRemaining / NUMBER_OF_MINES;
     minesRemainingText.textContent = minesRemaining;
-    // spiderHeadElement.style.transform = "translateX("+"90"+"%"+")";
-    console.log(spiderHeadElement);
-    spiderHeadElement.style.transform = "translateX("+(30*percentMinesRemaining)+"%)"
+    revealSpiderHead(minesRemaining, NUMBER_OF_MINES)
 }
 
 const revealTile = (board, tile) => {

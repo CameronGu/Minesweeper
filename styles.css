@@ -47,7 +47,7 @@
   .spider_head {
     display: flex;
     align-items: flex-end;
-    transform: translateX(30%);
+    transform: translateX(65%);
     transition: 1s ease-in-out;
     /* transform: rotate(-45deg);
     transform-origin: bottom left; */
