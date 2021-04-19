@@ -4,6 +4,16 @@
     font-weight: normal;
   }
 
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;    
+  }
+
   body {
     margin: 0;
     background-color: #333;
@@ -38,24 +48,32 @@
 
   .play_area_left {
     display: flex;
-    width: 250px;
+    width: 300px;
     height: 500px;
     z-index: -100;
-    /* transform: translateX(50%); */
+    background-color: rgba(255, 255, 255, .25);
   }
 
   .spider_head {
     display: flex;
     align-items: flex-end;
-    transform: translateX(65%);
+    transform: translateX(75%);
     transition: 1s ease-in-out;
-    /* transform: rotate(-45deg);
-    transform-origin: bottom left; */
   }
 
   .play_area_right {
-    width: 250px;
+    width: 300px;
     height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, .5);
+    z-index: -100;
+    padding: 1rem;
+  }
+
+  .instructions ul {
+    font-size: 1.25rem;
   }
   
   .board {
